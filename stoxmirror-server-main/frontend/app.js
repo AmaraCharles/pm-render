@@ -2325,7 +2325,7 @@ function renderFundAccountPage() {
 ${renderDepositHistory(user)}
 
 <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid hsl(var(--border));">
-  <p class="text-muted small">COPYRIGHT ©2025 vantagestonk, All rights Reserved</p>
+  <p class="text-muted small">COPYRIGHT ©2025 pruxdemarkets, All rights Reserved</p>
 </div>
 
 
@@ -3333,7 +3333,7 @@ function renderReferralsPage() {
   const html = `
     <div style="margin-bottom: 1.5rem;">
       <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Referral Program</h1>
-      <p class="text-muted">Earn rewards by inviting friends to vantagestonk</p>
+      <p class="text-muted">Earn rewards by inviting friends to pruxdemarkets</p>
     </div>
     
     <div class="stats-grid">
@@ -3355,7 +3355,7 @@ function renderReferralsPage() {
       <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Your Referral Code</h2>
       <p class="text-muted" style="margin-bottom: 1rem;">Share this code with your friends. They get a bonus and you earn 10% of their first deposit!</p>
       <div class="referral-code">
-        <input type="text" id="referralCodeInput" class="input" value="https://www.vantagestonk.com/register?ref=${user.referralCode}" readonly>
+        <input type="text" id="referralCodeInput" class="input" value="https://www.pruxdemarkets.com/register?ref=${user.referralCode}" readonly>
         <button class="copy-btn" onclick="copyReferralCode()">
           <svg style="width: 1rem; height: 1rem; display: inline; vertical-align: middle; margin-right: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>

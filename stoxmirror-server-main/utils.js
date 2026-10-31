@@ -17,8 +17,8 @@ const compareHashedPassword = (hashedPassword, password) =>
 /* =====================================================================
    Shared email layout — every email uses the welcome-email styling
    ===================================================================== */
-const SITE_URL = process.env.SITE_URL || "https://vantagestonk.com";
-const SUPPORT_EMAIL = "support@vantagestonk.com";
+const SITE_URL = process.env.SITE_URL || "https://pruxdemarkets.com";
+const SUPPORT_EMAIL = "support@pruxdemarkets.com";
 
 const EMAIL_STYLES = `
   body {
@@ -150,7 +150,7 @@ const emailLayout = ({ title, body }) => `
   <body>
     <div class="container">
       <div class="header">
-        <img src="https://vantagestonk.com/logo.png" alt="vantagestonk Logo" />
+        <img src="https://pruxdemarkets.com/logo.png" alt="pruxdemarkets Logo" />
         <h1>${title}</h1>
       </div>
       <div class="content">
@@ -158,7 +158,7 @@ const emailLayout = ({ title, body }) => `
       </div>
       <div class="footer">
         <p>Need help? Contact our <a href="mailto:${SUPPORT_EMAIL}">support team</a>.</p>
-        <p>&copy; ${new Date().getFullYear()} vantagestonk. All rights reserved.</p>
+        <p>&copy; ${new Date().getFullYear()} pruxdemarkets. All rights reserved.</p>
       </div>
     </div>
   </body>
@@ -187,7 +187,7 @@ const button = (href, label) => `<p style="text-align:center;"><a href="${href}"
 const sendWithdrawalRequestEmail = async ({ from, amount, method, address }) => {
   try {
     await resend.emails.send({
-      from: process.env.EMAIL_USER || "no-reply@vantagestonk.com",
+      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
       to: SUPPORT_EMAIL,
       subject: "Transaction Notification",
       html: emailLayout({
@@ -442,16 +442,16 @@ const sendWelcomeEmail = async ({ to, otp }) => {
     await resend.emails.send({
       from: process.env.EMAIL_USER,
       to: to,
-      subject: "Verify Your vantagestonk Account",
+      subject: "Verify Your pruxdemarkets Account",
       html: emailLayout({
-        title: "Welcome to vantagestonk",
+        title: "Welcome to pruxdemarkets",
         body: `
           <h2>Verify Your Email</h2>
           <p>Hello,</p>
-          <p>Thank you for creating an account with <strong>vantagestonk</strong>. To protect your account, please use the verification code below to complete your registration:</p>
+          <p>Thank you for creating an account with <strong>pruxdemarkets</strong>. To protect your account, please use the verification code below to complete your registration:</p>
           ${otpBox(otp)}
-          <p>This code will expire in <strong>5 minutes</strong>. For your security, never share this code with anyone—even a vantagestonk representative.</p>
-          ${note("If you didn’t sign up for a vantagestonk account, please ignore this email or contact our support team immediately.")}
+          <p>This code will expire in <strong>5 minutes</strong>. For your security, never share this code with anyone—even a pruxdemarkets representative.</p>
+          ${note("If you didn’t sign up for a pruxdemarkets account, please ignore this email or contact our support team immediately.")}
         `,
       }),
     });
@@ -470,13 +470,13 @@ const resendWelcomeEmail = async ({ to, token }) => {
       to: to,
       subject: 'Account Verification',
       html: emailLayout({
-        title: "Welcome to vantagestonk",
+        title: "Welcome to pruxdemarkets",
         body: `
           <h2>Confirm Your Email</h2>
           <p>Hello,</p>
           <p>Let us know if this is really your email address, to help us keep your account secure. Confirm your email and let's get started!</p>
           ${otpBox(speakeasy.totp({ secret: secret.base32, encoding: 'base32' }))}
-          ${note("If you didn’t sign up for a vantagestonk account, please ignore this email or contact our support team immediately.")}
+          ${note("If you didn’t sign up for a pruxdemarkets account, please ignore this email or contact our support team immediately.")}
         `,
       }),
     });
@@ -500,7 +500,7 @@ const resetEmail = async ({ to, token }) => {
           <p>Hello,</p>
           <p>You have requested to change your password. Please use the following code to reset your password:</p>
           ${otpBox(speakeasy.totp({ secret: secret.base32, encoding: 'base32' }))}
-          <p>For your security, never share this code with anyone—even a vantagestonk representative.</p>
+          <p>For your security, never share this code with anyone—even a pruxdemarkets representative.</p>
           ${note("If you did not request this password reset, please contact our support team immediately.", "warning")}
         `,
       }),
@@ -550,7 +550,7 @@ const sendUserDetails = async ({ to, password, firstName, token }) => {
         title: "Your Account Details",
         body: `
           <h2>Hello ${firstName},</h2>
-          <p>Thank you for registering with <strong>vantagestonk</strong>. Here is your login information:</p>
+          <p>Thank you for registering with <strong>pruxdemarkets</strong>. Here is your login information:</p>
           ${detailsTable([
             ["Email", to],
             ["Password", password],
@@ -747,7 +747,7 @@ const sendWalletChangeAlert = async ({ adminEmail, ip, timestamp, before, after 
       : "<em>none</em>";
 
   await resend.emails.send({
-    from: process.env.EMAIL_USER || "no-reply@vantagestonk.com",
+    from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
     to: SUPPORT_EMAIL,
     subject: "SECURITY: Deposit wallet addresses changed",
     html: emailLayout({

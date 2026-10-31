@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <title>Create Account — Logic Pro Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    :root{
+      --bg:#0a0a0a; --panel-a:#24262d; --panel-b:#0e0f12; --card-border:rgba(64,74,94,.5);
+      --text:#e2e2e2; --muted:#b5b5b5; --heading:#fff; --accent1:#3760ff; --accent2:#35a6ec;
+      --field:#101216; --field-border:rgba(255,255,255,.1); --danger:#ff5470; --ok:#2fd27a;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Inter',Arial,sans-serif;background:var(--bg);color:var(--text);
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+      background-image:radial-gradient(1200px 500px at 50% -10%, rgba(55,96,255,.12), transparent 60%);
+    }
+    .auth-card{
+      width:100%;max-width:560px;background:linear-gradient(137.45deg,var(--panel-a) 7%,var(--panel-b) 104%);
+      border:1px solid var(--card-border);border-radius:20px;padding:34px 32px;box-shadow:0 30px 80px rgba(0,0,0,.6);
+    }
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+    .brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+    .brand-name{font-weight:700;color:var(--heading)}
+    .brand-name span{background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    h1{color:var(--heading);font-size:1.5rem;font-weight:800;margin-bottom:4px}
+    .sub{color:var(--muted);font-size:.92rem;margin-bottom:20px}
+    /* progress */
+    .steps{display:flex;gap:8px;margin-bottom:26px}
+    .steps .dot{flex:1;height:4px;border-radius:999px;background:rgba(255,255,255,.1)}
+    .steps .dot.active{background:linear-gradient(135deg,var(--accent1),var(--accent2))}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{display:block;font-size:.84rem;color:var(--muted);margin:14px 0 7px}
+    .field{width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--text);border-radius:10px;padding:12px 13px;font-size:.93rem;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+    .field:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(53,166,236,.15)}
+    select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+    .choice{display:flex;gap:12px;margin-top:7px}
+    .choice label{flex:1;display:flex;align-items:center;gap:9px;margin:0;padding:13px;border:1px solid var(--field-border);border-radius:10px;cursor:pointer;color:var(--text);font-size:.95rem}
+    .choice label:has(input:checked){border-color:var(--accent2);background:rgba(53,166,236,.08)}
+    .pw-wrap{position:relative}
+    .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:.78rem}
+    .terms{display:flex;align-items:flex-start;gap:9px;margin-top:16px;font-size:.85rem;color:var(--muted)}
+    .terms a{color:var(--accent2);text-decoration:none}
+    .nav{display:flex;gap:12px;margin-top:24px}
+    .btn{flex:1;border:none;border-radius:10px;padding:13px;cursor:pointer;font-family:inherit;font-weight:700;font-size:.98rem;color:#fff;background:linear-gradient(135deg,var(--accent1),var(--accent2));transition:filter .15s}
+    .btn:hover{filter:brightness(1.08)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.ghost{background:transparent;border:1px solid var(--field-border);color:var(--text);flex:0 0 120px}
+    .alt{text-align:center;margin-top:20px;color:var(--muted);font-size:.9rem}
+    .alt a{color:var(--accent2);text-decoration:none;font-weight:600}
+    .msg{margin-top:14px;font-size:.87rem;border-radius:10px;padding:11px 13px;display:none}
+    .msg.err{display:block;background:rgba(255,84,112,.1);border:1px solid rgba(255,84,112,.3);color:var(--danger)}
+    .msg.ok{display:block;background:rgba(47,210,122,.1);border:1px solid rgba(47,210,122,.3);color:var(--ok)}
+    .step{display:none}.step.active{display:block}
+    /* OTP */
+    .otp-row{display:flex;gap:10px;justify-content:center;margin:18px 0}
+    .otp{width:48px;height:56px;text-align:center;font-size:1.4rem;background:var(--field);border:1px solid var(--field-border);border-radius:10px;color:var(--heading);outline:none}
+    .otp:focus{border-color:var(--accent2)}
+    .otp-note{text-align:center;color:var(--muted);font-size:.85rem}
+    /* Country picker */
+    .country-search{position:relative}
+    .country-search .field{padding-left:38px}
+    .country-search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+    .country-list{margin-top:10px;max-height:300px;overflow-y:auto;border:1px solid var(--field-border);border-radius:10px;background:var(--field)}
+    .country-list::-webkit-scrollbar{width:8px}.country-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+    .country-opt{width:100%;display:flex;align-items:center;gap:12px;padding:11px 14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text);font-family:inherit;font-size:.93rem;text-align:left;cursor:pointer}
+    .country-opt:last-child{border-bottom:none}
+    .country-opt:hover{background:rgba(255,255,255,.04)}
+    .country-opt.selected{background:rgba(53,166,236,.1);color:var(--heading)}
+    .country-opt .flag{font-size:1.25rem;line-height:1;width:24px;text-align:center}
+    .country-opt .code{margin-left:auto;font-size:.75rem;color:var(--muted);letter-spacing:.04em}
+    .country-opt.selected .code::after{content:' ✓';color:var(--accent2);font-weight:700}
+    .country-empty{padding:18px;text-align:center;color:var(--muted);font-size:.88rem}
+    .country-chosen{display:none;align-items:center;gap:10px;margin-top:12px;padding:11px 14px;border:1px solid var(--accent2);background:rgba(53,166,236,.08);border-radius:10px;font-size:.92rem;color:var(--heading)}
+    .country-chosen.show{display:flex}
+    @media(max-width:520px){.grid2{grid-template-columns:1fr}.btn.ghost{flex:0 0 96px}}
+  </style>
+</head>
+<body>
+  <form class="auth-card" id="regForm" autocomplete="on">
+    <div class="brand"><span class="brand-mark">PM</span><span class="brand-name">PRUXDE<span>Pro</span> Trading</span></div>
+    <h1>Create your account</h1>
+    <p class="sub" id="stepSub">Step 1 of 5 — Your details</p>
+    <div class="steps">
+      <div class="dot active" data-dot="1"></div><div class="dot" data-dot="2"></div>
+      <div class="dot" data-dot="3"></div><div class="dot" data-dot="4"></div>
+      <div class="dot" data-dot="5"></div>
+    </div>
+
+    <!-- STEP 1: details -->
+    <section class="step active" data-step="1">
+      <div class="grid2">
+        <div><label>First name</label><input class="field" id="firstName" placeholder="John"></div>
+        <div><label>Last name</label><input class="field" id="lastName" placeholder="Doe"></div>
+      </div>
+      <label>Email address</label><input class="field" type="email" id="email" placeholder="you@example.com">
+      <label>Phone number</label><input class="field" id="phone" placeholder="+1 555 000 0000">
+      <label>Account type</label>
+      <div class="choice">
+        <label><input type="radio" name="accountType" value="individual" checked> Individual</label>
+        <label><input type="radio" name="accountType" value="business"> Business</label>
+      </div>
+    </section>
+
+    <!-- STEP 2: country -->
+    <section class="step" data-step="2">
+      <label for="countrySearch">Country of residence</label>
+      <div class="country-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input class="field" id="countrySearch" placeholder="Search for your country" autocomplete="off">
+      </div>
+      <div class="country-list" id="countryList" role="listbox" aria-label="Countries"></div>
+      <div class="country-chosen" id="countryChosen"></div>
+      <input type="hidden" id="country">
+    </section>
+
+    <!-- STEP 3: currency -->
+    <section class="step" data-step="3">
+      <label>Base account currency</label>
+      <select class="field" id="currency">
+        <option value="">Select currency</option>
+        <option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option>
+        <option>CAD — Canadian Dollar</option><option>AUD — Australian Dollar</option><option>JPY — Japanese Yen</option>
+        <option>CHF — Swiss Franc</option><option>NGN — Nigerian Naira</option><option>ZAR — South African Rand</option>
+        <option>AED — UAE Dirham</option><option>INR — Indian Rupee</option>
+      </select>
+      <label>Referral code <span style="opacity:.6">(optional)</span></label>
+      <input class="field" id="referralCode" placeholder="Enter a referral code">
+    </section>
+
+    <!-- STEP 4: trading profile -->
+    <section class="step" data-step="4">
+      <div class="grid2">
+        <div><label>Years of experience</label>
+          <select class="field" id="survey_yearsOfExperience"><option value="">Select</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+        <div><label>Knowledge level</label>
+          <select class="field" id="survey_knowledgeLevel"><option value="">Select</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Professional</option></select></div>
+      </div>
+      <div class="grid2">
+        <div><label>Trading frequency</label>
+          <select class="field" id="survey_tradingFrequency"><option value="">Select</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Occasionally</option></select></div>
+        <div><label>Preferred markets</label>
+          <select class="field" id="survey_preferredMarkets"><option value="">Select</option><option>Forex</option><option>Crypto</option><option>Stocks</option><option>Commodities</option><option>Indices</option></select></div>
+      </div>
+      <div class="grid2">
+        <div><label>Instruments traded</label>
+          <select class="field" id="survey_instrumentsTraded"><option value="">Select</option><option>Spot</option><option>CFDs</option><option>Futures</option><option>Options</option></select></div>
+        <div><label>Trading platforms</label>
+          <select class="field" id="survey_tradingPlatforms"><option value="">Select</option><option>MetaTrader 4</option><option>MetaTrader 5</option><option>cTrader</option><option>TradingView</option><option>Other</option></select></div>
+      </div>
+      <div class="grid2">
+        <div><label>Annual income</label>
+          <select class="field" id="survey_annualIncome"><option value="">Select a range</option><option>Under 50,000</option><option>50,000 – 250,000</option><option>250,000 – 500,000</option><option>500,000 – 1,000,000</option><option>1,000,000 – 5,000,000</option><option>10,000,000+</option></select></div>
+        <div><label>Primary income source</label>
+          <select class="field" id="survey_primaryIncomeSource"><option value="">Select one</option><option>Employment / salary</option><option>Self-employed / business owner</option><option>Investments / savings</option><option>Inheritance</option><option>Pension / retirement</option><option>Other</option></select></div>
+      </div>
+      <label>Tax residency</label><input class="field" id="survey_taxResidency" placeholder="Country of tax residency">
+    </section>
+
+    <!-- STEP 5: security -->
+    <section class="step" data-step="5">
+      <label>Password</label>
+      <div class="pw-wrap"><input class="field" type="password" id="password" placeholder="Create a password (min 6 chars)"><button type="button" class="pw-toggle" data-for="password">Show</button></div>
+      <label>Confirm password</label>
+      <div class="pw-wrap"><input class="field" type="password" id="confirm" placeholder="Re-enter your password"><button type="button" class="pw-toggle" data-for="confirm">Show</button></div>
+      <div class="terms">
+        <input type="checkbox" id="terms" style="margin-top:3px">
+        <label for="terms" style="margin:0;color:var(--muted)">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</label>
+      </div>
+    </section>
+
+    <div class="msg" id="msg"></div>
+
+    <div class="nav">
+      <button type="button" class="btn ghost" id="backBtn" style="display:none">Back</button>
+      <button type="button" class="btn" id="nextBtn">Continue</button>
+    </div>
+    <p class="alt">Already have an account? <a href="/login">Sign in</a></p>
+  </form>
+
+  <script>
+    const API = "https://logicpro-render.onrender.com";
+    let step = 1; const LAST = 5;
+    const $ = (id) => document.getElementById(id);
+    const msg = $('msg');
+    const showMsg = (t, ok) => { msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.textContent = t; msg.style.display = 'block'; };
+    const clearMsg = () => { msg.style.display = 'none'; msg.className = 'msg'; };
+
+    function render(){
+      document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === step));
+      document.querySelectorAll('[data-dot]').forEach(d => d.classList.toggle('active', +d.dataset.dot <= step));
+      $('backBtn').style.display = step > 1 && step < LAST ? 'block' : 'none';
+      const subs = ['', 'Step 1 of 5 — Your details', 'Step 2 of 5 — Country of residence', 'Step 3 of 5 — Currency', 'Step 4 of 5 — Trading profile', 'Step 5 of 5 — Security'];
+      $('stepSub').textContent = subs[step];
+      $('nextBtn').textContent = step === LAST ? 'Create account' : 'Continue';
+      clearMsg();
+      if(step === 2){ setTimeout(() => $('countrySearch').focus(), 0); }
+    }
+
+    function validate(){
+      const req = (id, name) => { const v = $(id).value.trim(); if(!v){ showMsg('Please fill in: ' + name); $(id).focus(); return false; } return true; };
+      if(step === 1){
+        if(!req('firstName','first name') || !req('lastName','last name')) return false;
+        const email = $('email').value.trim();
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMsg('Please enter a valid email address.'); return false; }
+        if(!req('phone','phone number')) return false;
+      } else if(step === 2){
+        if(!$('country').value){ showMsg('Please select your country of residence.'); $('countrySearch').focus(); return false; }
+      } else if(step === 3){
+        if(!req('currency','currency')) return false;
+      } else if(step === 4){
+        const ids = ['survey_yearsOfExperience','survey_knowledgeLevel','survey_tradingFrequency','survey_preferredMarkets','survey_instrumentsTraded','survey_tradingPlatforms','survey_annualIncome','survey_primaryIncomeSource'];
+        for(const id of ids){ if(!$(id).value){ showMsg('Please answer all questions.'); return false; } }
+        if(!req('survey_taxResidency','tax residency')) return false;
+      } else if(step === 5){
+        const p = $('password').value, c = $('confirm').value;
+        if(p.length < 6){ showMsg('Password must be at least 6 characters.'); return false; }
+        if(p !== c){ showMsg("Passwords don't match."); return false; }
+        if(!$('terms').checked){ showMsg('Please accept the Terms to continue.'); return false; }
+      }
+      return true;
+    }
+
+    function collect(){
+      const accountType = document.querySelector('input[name="accountType"]:checked').value;
+      return {
+        firstName:$('firstName').value.trim(), lastName:$('lastName').value.trim(),
+        email:$('email').value.trim(), phone:$('phone').value.trim(),
+        accountType, country:$('country').value.trim(), currency:$('currency').value,
+        referralCode:$('referralCode').value.trim(),
+        password:$('password').value,
+        survey_yearsOfExperience:$('survey_yearsOfExperience').value,
+        survey_knowledgeLevel:$('survey_knowledgeLevel').value,
+        survey_tradingFrequency:$('survey_tradingFrequency').value,
+        survey_preferredMarkets:$('survey_preferredMarkets').value,
+        survey_instrumentsTraded:$('survey_instrumentsTraded').value,
+        survey_tradingPlatforms:$('survey_tradingPlatforms').value,
+        survey_annualIncome:$('survey_annualIncome').value,
+        survey_primaryIncomeSource:$('survey_primaryIncomeSource').value,
+        survey_taxResidency:$('survey_taxResidency').value.trim(),
+        surveyCompleted:true
+      };
+    }
+
+    async function submitRegistration(){
+      const btn = $('nextBtn'); btn.disabled = true; btn.textContent = 'Creating…';
+      showMsg('Processing . . ..', true);
+      try{
+        const res = await jQuery.ajax({ type:'POST', url:API + '/auth/register', contentType:'application/json', data: JSON.stringify(collect()), dataType:'json', timeout:60000 });
+        if(res && res.otp != null){ localStorage.setItem('reg_otp', String(res.otp)); }
+        localStorage.setItem('reg_email', $('email').value.trim());
+        window.location.href = '/otp.html';   // continue on the dedicated OTP page
+        return;
+      }catch(err){
+        const m = (err.responseJSON && err.responseJSON.message)
+          || (err.statusText === 'timeout' ? 'The server took too long to respond — please try again.' : 'Registration failed. Please try again.');
+        showMsg(m);
+        btn.disabled = false; btn.textContent = 'Create account';   // reset so it never sticks on "Creating…"
+      }
+    }
+
+    async function verifyAndFinish(){
+      const entered = Array.from(document.querySelectorAll('.otp')).map(i => i.value).join('');
+      const stored = localStorage.getItem('reg_otp');
+      if(entered.length < 6){ showMsg('Enter the 6-digit code.'); return; }
+      if(stored && entered !== stored){ showMsg('That code is incorrect.'); return; }
+      const btn = $('nextBtn'); btn.disabled = true; btn.textContent = 'Verifying…';
+      try{ await jQuery.ajax({ type:'PUT', url:API + '/auth/' + encodeURIComponent($('email').value.trim()) + '/verify', timeout:30000 }); }catch(e){ /* best-effort; account already created */ }
+      localStorage.removeItem('reg_otp');
+      showMsg('Account verified! Redirecting to sign in…', true);
+      setTimeout(() => { window.location.href = '/login'; }, 900);
+    }
+
+    $('nextBtn').addEventListener('click', () => {
+      if(!validate()) return;
+      if(step === LAST){ submitRegistration(); return; }
+      step++; render();
+    });
+    $('backBtn').addEventListener('click', () => { if(step > 1){ step--; render(); } });
+
+    document.querySelectorAll('.pw-toggle').forEach(b => b.addEventListener('click', function(){
+      const f = $(this.dataset.for); const show = f.type === 'password';
+      f.type = show ? 'text' : 'password'; this.textContent = show ? 'Hide' : 'Show';
+    }));
+
+    // ===== Country picker =====
+    const COUNTRIES = 'AF|Afghanistan;AL|Albania;DZ|Algeria;AD|Andorra;AO|Angola;AG|Antigua and Barbuda;AR|Argentina;AM|Armenia;AU|Australia;AT|Austria;AZ|Azerbaijan;BS|Bahamas;BH|Bahrain;BD|Bangladesh;BB|Barbados;BY|Belarus;BE|Belgium;BZ|Belize;BJ|Benin;BT|Bhutan;BO|Bolivia;BA|Bosnia and Herzegovina;BW|Botswana;BR|Brazil;BN|Brunei;BG|Bulgaria;BF|Burkina Faso;BI|Burundi;CV|Cabo Verde;KH|Cambodia;CM|Cameroon;CA|Canada;CF|Central African Republic;TD|Chad;CL|Chile;CN|China;CO|Colombia;KM|Comoros;CG|Congo;CD|Congo (DRC);CR|Costa Rica;CI|Côte d’Ivoire;HR|Croatia;CU|Cuba;CY|Cyprus;CZ|Czechia;DK|Denmark;DJ|Djibouti;DM|Dominica;DO|Dominican Republic;EC|Ecuador;EG|Egypt;SV|El Salvador;GQ|Equatorial Guinea;ER|Eritrea;EE|Estonia;SZ|Eswatini;ET|Ethiopia;FJ|Fiji;FI|Finland;FR|France;GA|Gabon;GM|Gambia;GE|Georgia;DE|Germany;GH|Ghana;GR|Greece;GD|Grenada;GT|Guatemala;GN|Guinea;GW|Guinea-Bissau;GY|Guyana;HT|Haiti;HN|Honduras;HK|Hong Kong;HU|Hungary;IS|Iceland;IN|India;ID|Indonesia;IR|Iran;IQ|Iraq;IE|Ireland;IL|Israel;IT|Italy;JM|Jamaica;JP|Japan;JO|Jordan;KZ|Kazakhstan;KE|Kenya;KI|Kiribati;KW|Kuwait;KG|Kyrgyzstan;LA|Laos;LV|Latvia;LB|Lebanon;LS|Lesotho;LR|Liberia;LY|Libya;LI|Liechtenstein;LT|Lithuania;LU|Luxembourg;MO|Macao;MG|Madagascar;MW|Malawi;MY|Malaysia;MV|Maldives;ML|Mali;MT|Malta;MH|Marshall Islands;MR|Mauritania;MU|Mauritius;MX|Mexico;FM|Micronesia;MD|Moldova;MC|Monaco;MN|Mongolia;ME|Montenegro;MA|Morocco;MZ|Mozambique;MM|Myanmar;NA|Namibia;NR|Nauru;NP|Nepal;NL|Netherlands;NZ|New Zealand;NI|Nicaragua;NE|Niger;NG|Nigeria;KP|North Korea;MK|North Macedonia;NO|Norway;OM|Oman;PK|Pakistan;PW|Palau;PS|Palestine;PA|Panama;PG|Papua New Guinea;PY|Paraguay;PE|Peru;PH|Philippines;PL|Poland;PT|Portugal;PR|Puerto Rico;QA|Qatar;RO|Romania;RU|Russia;RW|Rwanda;KN|Saint Kitts and Nevis;LC|Saint Lucia;VC|Saint Vincent and the Grenadines;WS|Samoa;SM|San Marino;ST|São Tomé and Príncipe;SA|Saudi Arabia;SN|Senegal;RS|Serbia;SC|Seychelles;SL|Sierra Leone;SG|Singapore;SK|Slovakia;SI|Slovenia;SB|Solomon Islands;SO|Somalia;ZA|South Africa;KR|South Korea;SS|South Sudan;ES|Spain;LK|Sri Lanka;SD|Sudan;SR|Suriname;SE|Sweden;CH|Switzerland;SY|Syria;TW|Taiwan;TJ|Tajikistan;TZ|Tanzania;TH|Thailand;TL|Timor-Leste;TG|Togo;TO|Tonga;TT|Trinidad and Tobago;TN|Tunisia;TR|Türkiye;TM|Turkmenistan;TV|Tuvalu;UG|Uganda;UA|Ukraine;AE|United Arab Emirates;GB|United Kingdom;US|United States;UY|Uruguay;UZ|Uzbekistan;VU|Vanuatu;VA|Vatican City;VE|Venezuela;VN|Vietnam;YE|Yemen;ZM|Zambia;ZW|Zimbabwe'
+      .split(';').map(s => { const [code, name] = s.split('|'); return { code, name }; });
+    const EURO = ['AT','BE','HR','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES','AD','MC','SM','VA','ME'];
+    const CURRENCY_BY_COUNTRY = { US:'USD', GB:'GBP', CA:'CAD', AU:'AUD', JP:'JPY', CH:'CHF', LI:'CHF', NG:'NGN', ZA:'ZAR', AE:'AED', IN:'INR' };
+    const flagOf = (code) => String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+    let selectedCode = '';
+
+    function renderCountries(filter = ''){
+      const q = filter.trim().toLowerCase();
+      const list = COUNTRIES.filter(c => !q || c.name.toLowerCase().includes(q) || c.code.toLowerCase() === q);
+      const box = $('countryList');
+      if(!list.length){ box.innerHTML = '<div class="country-empty">No country matches “' + filter.replace(/[<>&]/g, '') + '”</div>'; return; }
+      box.innerHTML = list.map(c =>
+        '<button type="button" class="country-opt' + (c.code === selectedCode ? ' selected' : '') + '" role="option" data-code="' + c.code + '">' +
+        '<span class="flag">' + flagOf(c.code) + '</span><span>' + c.name + '</span><span class="code">' + c.code + '</span></button>'
+      ).join('');
+    }
+
+    function selectCountry(code){
+      const c = COUNTRIES.find(x => x.code === code); if(!c) return;
+      selectedCode = code;
+      $('country').value = c.name;
+      $('countryChosen').innerHTML = '<span class="flag" style="font-size:1.25rem">' + flagOf(code) + '</span> Selected: <strong>' + c.name + '</strong>';
+      $('countryChosen').classList.add('show');
+      // Pre-fill currency and tax residency (user can still change them)
+      const cur = EURO.includes(code) ? 'EUR' : CURRENCY_BY_COUNTRY[code];
+      if(cur){ const opt = [...$('currency').options].find(o => o.text.startsWith(cur)); if(opt) $('currency').value = opt.value; }
+      if(!$('survey_taxResidency').value.trim()) $('survey_taxResidency').value = c.name;
+      renderCountries($('countrySearch').value);
+      clearMsg();
+    }
+
+    $('countryList').addEventListener('click', e => { const b = e.target.closest('.country-opt'); if(b) selectCountry(b.dataset.code); });
+    $('countrySearch').addEventListener('input', e => renderCountries(e.target.value));
+    $('countrySearch').addEventListener('keydown', e => {
+      if(e.key === 'Enter'){ e.preventDefault(); const first = $('countryList').querySelector('.country-opt'); if(first) selectCountry(first.dataset.code); }
+    });
+    renderCountries();
+
+    // OTP auto-advance
+    const otps = document.querySelectorAll('.otp');
+    otps.forEach((inp, i) => {
+      inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g,''); if(inp.value && i < otps.length-1) otps[i+1].focus(); });
+      inp.addEventListener('keydown', e => { if(e.key === 'Backspace' && !inp.value && i > 0) otps[i-1].focus(); });
+    });
+
+    render();
+  </script>
+</body>
+</html>

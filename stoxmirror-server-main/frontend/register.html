@@ -118,6 +118,7 @@ body {top:0 !important;}
     font-weight:600;
 }
 .option-card .emoji { display:block; font-size:20px; margin-bottom:6px; }
+.option-card .option-desc { margin-top:6px; font-size:12px; font-weight:400; line-height:1.4; color:#9aa4af; }
 
 .radio-list { margin-bottom:20px; }
 .radio-row {
@@ -171,8 +172,30 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
 
 <div class="wrapper">
 
+<!-- ACCOUNT TYPE — first question -->
+<div class="card active" id="pageAccountType">
+    <h2>Choose Your Account Type</h2>
+    <p class="subtitle">Are you opening an individual or a business account?</p>
+
+    <div class="option-grid" id="accountTypeOptions">
+        <div class="option-card" data-value="individual">
+            <span class="emoji">👤</span>
+            Individual
+            <div class="option-desc">Trade and invest in your own name.</div>
+        </div>
+        <div class="option-card" data-value="business">
+            <span class="emoji">🏢</span>
+            Business
+            <div class="option-desc">Trade and invest on behalf of a company.</div>
+        </div>
+    </div>
+
+    <button class="primary" onclick="continueAccountType()">Continue</button>
+</div>
+
 <!-- PAGE 1 -->
-<div class="card active" id="page1">
+<div class="card" id="page1">
+    <span class="back-link" onclick="nextPage('AccountType')">← Back</span>
     <h2>Select Your Country of Residence</h2>
     <p class="subtitle">It must be a country where you have a permanent residence permit.</p>
 
@@ -384,6 +407,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
 
 <!-- PAGE 2 -->
 <div class="card" id="page2">
+  <span class="back-link" onclick="nextPage(1)">← Back</span>
   <h2>Enter Your Details</h2>
 
 <label>First Name</label>
@@ -398,16 +422,6 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
 <label>Email</label>
 <input type="email" id="email" placeholder="example@email.com">
 
-<label>Account Type</label>
-<div class="account-type-choice" style="display:flex;gap:10px;margin-bottom:12px;">
-  <label class="acct-opt" style="flex:1;display:flex;align-items:center;gap:8px;padding:12px;border:1px solid #2a3550;border-radius:8px;cursor:pointer;">
-    <input type="radio" name="accountType" value="individual" checked> Individual
-  </label>
-  <label class="acct-opt" style="flex:1;display:flex;align-items:center;gap:8px;padding:12px;border:1px solid #2a3550;border-radius:8px;cursor:pointer;">
-    <input type="radio" name="accountType" value="business"> Business
-  </label>
-</div>
-
     <button class="primary" onclick="continueEmail()">Continue</button>
 </div>
 
@@ -418,6 +432,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
      ===================================================================== -->
 <div class="card" id="pageCurrency">
     <div class="step-progress">
+        <div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot current"></div><div class="step-dot"></div>
         <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div>
@@ -582,6 +597,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
      ===================================================================== -->
 <div class="card" id="pageTradingExperience">
     <div class="step-progress">
+        <div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot current"></div>
         <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div>
@@ -625,6 +641,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
      ===================================================================== -->
 <div class="card" id="pageMarkets">
     <div class="step-progress">
+        <div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot current"></div><div class="step-dot"></div><div class="step-dot"></div>
@@ -656,6 +673,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
      ===================================================================== -->
 <div class="card" id="pageFinancialProfile">
     <div class="step-progress">
+        <div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot done"></div>
         <div class="step-dot done"></div><div class="step-dot current"></div><div class="step-dot"></div>
@@ -782,6 +800,21 @@ $(document).ready(function(){
     });
 });
 
+// ACCOUNT TYPE
+document.querySelectorAll('#accountTypeOptions .option-card').forEach(card=>{
+    card.addEventListener('click', function(){
+        document.querySelectorAll('#accountTypeOptions .option-card').forEach(c=>c.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+function continueAccountType(){
+    const selected = document.querySelector('#accountTypeOptions .option-card.selected');
+    if(!selected) return alert("Please choose Individual or Business");
+    localStorage.setItem("accountType", selected.dataset.value);
+    nextPage(1);
+}
+
 // STEP 1
 function continueCountry(){
     if(!$('#country').val()) return alert("Please select your country");
@@ -802,13 +835,10 @@ function continueEmail(){
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
         return alert("Please enter a valid email address");
 
-    const accountType = $('input[name="accountType"]:checked').val() || 'individual';
-
     localStorage.setItem("email", email);
     localStorage.setItem("firstName", firstName);
     localStorage.setItem("lastName", lastName);
     localStorage.setItem("phone", phone);
-    localStorage.setItem("accountType", accountType);
 
     $('#displayEmail').text(email);
     // NEW CODE 014: go to the currency step instead of straight to password

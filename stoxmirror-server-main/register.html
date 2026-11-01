@@ -40,9 +40,16 @@
     .field{width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--text);border-radius:10px;padding:12px 13px;font-size:.93rem;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
     .field:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(53,166,236,.15)}
     select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
-    .choice{display:flex;gap:12px;margin-top:7px}
-    .choice label{flex:1;display:flex;align-items:center;gap:9px;margin:0;padding:13px;border:1px solid var(--field-border);border-radius:10px;cursor:pointer;color:var(--text);font-size:.95rem}
-    .choice label:has(input:checked){border-color:var(--accent2);background:rgba(53,166,236,.08)}
+    .type-prompt{color:var(--heading);font-size:1.05rem;font-weight:700;margin-bottom:14px}
+    .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .type-card{position:relative;display:block;margin:0;padding:22px 18px;border:1px solid var(--field-border);border-radius:14px;background:var(--field);cursor:pointer;color:var(--text);transition:border-color .15s,background .15s}
+    .type-card input{position:absolute;opacity:0;pointer-events:none}
+    .type-card:hover{border-color:var(--accent2)}
+    .type-card:has(input:checked){border-color:var(--accent2);background:rgba(53,166,236,.08)}
+    .type-card:has(input:focus-visible){box-shadow:0 0 0 3px rgba(53,166,236,.15)}
+    .type-icon{display:block;font-size:1.7rem;line-height:1;margin-bottom:12px}
+    .type-title{display:block;color:var(--heading);font-weight:700;font-size:1rem;margin-bottom:5px}
+    .type-desc{display:block;color:var(--muted);font-size:.83rem;line-height:1.45}
     .pw-wrap{position:relative}
     .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:.78rem}
     .terms{display:flex;align-items:flex-start;gap:9px;margin-top:16px;font-size:.85rem;color:var(--muted)}
@@ -79,32 +86,36 @@
     .country-empty{padding:18px;text-align:center;color:var(--muted);font-size:.88rem}
     .country-chosen{display:none;align-items:center;gap:10px;margin-top:12px;padding:11px 14px;border:1px solid var(--accent2);background:rgba(53,166,236,.08);border-radius:10px;font-size:.92rem;color:var(--heading)}
     .country-chosen.show{display:flex}
-    @media(max-width:520px){.grid2{grid-template-columns:1fr}.btn.ghost{flex:0 0 96px}}
+    @media(max-width:520px){.grid2,.type-grid{grid-template-columns:1fr}.btn.ghost{flex:0 0 96px}}
   </style>
 </head>
 <body>
   <form class="auth-card" id="regForm" autocomplete="on">
-    <div class="brand"><span class="brand-mark">PM</span><span class="brand-name">PRUXDE<span>Pro</span> Trading</span></div>
+    <div class="brand"><span class="brand-mark">PM</span><span class="brand-name">PRUXDE<span>MARKETS</span></span></div>
     <h1>Create your account</h1>
-    <p class="sub" id="stepSub">Step 1 of 5 — Your details</p>
+    <p class="sub" id="stepSub">Step 1 of 6 — Account type</p>
     <div class="steps">
       <div class="dot active" data-dot="1"></div><div class="dot" data-dot="2"></div>
       <div class="dot" data-dot="3"></div><div class="dot" data-dot="4"></div>
-      <div class="dot" data-dot="5"></div>
+      <div class="dot" data-dot="5"></div><div class="dot" data-dot="6"></div>
     </div>
 
-    <!-- STEP 1: details -->
+    <!-- STEP 1: account type -->
     <section class="step active" data-step="1">
-      <div class="grid2">
-        <div><label>First name</label><input class="field" id="firstName" placeholder="John"></div>
-        <div><label>Last name</label><input class="field" id="lastName" placeholder="Doe"></div>
-      </div>
-      <label>Email address</label><input class="field" type="email" id="email" placeholder="you@example.com">
-      <label>Phone number</label><input class="field" id="phone" placeholder="+1 555 000 0000">
-      <label>Account type</label>
-      <div class="choice">
-        <label><input type="radio" name="accountType" value="individual" checked> Individual</label>
-        <label><input type="radio" name="accountType" value="business"> Business</label>
+      <p class="type-prompt">Are you opening an individual or a business account?</p>
+      <div class="type-grid">
+        <label class="type-card">
+          <input type="radio" name="accountType" value="individual">
+          <span class="type-icon">👤</span>
+          <span class="type-title">Individual</span>
+          <span class="type-desc">Trade and invest in your own name.</span>
+        </label>
+        <label class="type-card">
+          <input type="radio" name="accountType" value="business">
+          <span class="type-icon">🏢</span>
+          <span class="type-title">Business</span>
+          <span class="type-desc">Trade and invest on behalf of a company.</span>
+        </label>
       </div>
     </section>
 
@@ -120,8 +131,18 @@
       <input type="hidden" id="country">
     </section>
 
-    <!-- STEP 3: currency -->
+    <!-- STEP 3: details -->
     <section class="step" data-step="3">
+      <div class="grid2">
+        <div><label>First name</label><input class="field" id="firstName" placeholder="John"></div>
+        <div><label>Last name</label><input class="field" id="lastName" placeholder="Doe"></div>
+      </div>
+      <label>Email address</label><input class="field" type="email" id="email" placeholder="you@example.com">
+      <label>Phone number</label><input class="field" id="phone" placeholder="+1 555 000 0000">
+    </section>
+
+    <!-- STEP 4: currency -->
+    <section class="step" data-step="4">
       <label>Base account currency</label>
       <select class="field" id="currency">
         <option value="">Select currency</option>
@@ -134,8 +155,8 @@
       <input class="field" id="referralCode" placeholder="Enter a referral code">
     </section>
 
-    <!-- STEP 4: trading profile -->
-    <section class="step" data-step="4">
+    <!-- STEP 5: trading profile -->
+    <section class="step" data-step="5">
       <div class="grid2">
         <div><label>Years of experience</label>
           <select class="field" id="survey_yearsOfExperience"><option value="">Select</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
@@ -163,8 +184,8 @@
       <label>Tax residency</label><input class="field" id="survey_taxResidency" placeholder="Country of tax residency">
     </section>
 
-    <!-- STEP 5: security -->
-    <section class="step" data-step="5">
+    <!-- STEP 6: security -->
+    <section class="step" data-step="6">
       <label>Password</label>
       <div class="pw-wrap"><input class="field" type="password" id="password" placeholder="Create a password (min 6 chars)"><button type="button" class="pw-toggle" data-for="password">Show</button></div>
       <label>Confirm password</label>
@@ -185,8 +206,8 @@
   </form>
 
   <script>
-    const API = "https://logicpro-render.onrender.com";
-    let step = 1; const LAST = 5;
+    const API = "https://pm-render-853f.onrender.com";
+    let step = 1; const LAST = 6;
     const $ = (id) => document.getElementById(id);
     const msg = $('msg');
     const showMsg = (t, ok) => { msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.textContent = t; msg.style.display = 'block'; };
@@ -196,7 +217,7 @@
       document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === step));
       document.querySelectorAll('[data-dot]').forEach(d => d.classList.toggle('active', +d.dataset.dot <= step));
       $('backBtn').style.display = step > 1 && step < LAST ? 'block' : 'none';
-      const subs = ['', 'Step 1 of 5 — Your details', 'Step 2 of 5 — Country of residence', 'Step 3 of 5 — Currency', 'Step 4 of 5 — Trading profile', 'Step 5 of 5 — Security'];
+      const subs = ['', 'Step 1 of 6 — Account type', 'Step 2 of 6 — Country of residence', 'Step 3 of 6 — Your details', 'Step 4 of 6 — Currency', 'Step 5 of 6 — Trading profile', 'Step 6 of 6 — Security'];
       $('stepSub').textContent = subs[step];
       $('nextBtn').textContent = step === LAST ? 'Create account' : 'Continue';
       clearMsg();
@@ -206,19 +227,21 @@
     function validate(){
       const req = (id, name) => { const v = $(id).value.trim(); if(!v){ showMsg('Please fill in: ' + name); $(id).focus(); return false; } return true; };
       if(step === 1){
+        if(!document.querySelector('input[name="accountType"]:checked')){ showMsg('Please choose Individual or Business.'); return false; }
+      } else if(step === 2){
+        if(!$('country').value){ showMsg('Please select your country of residence.'); $('countrySearch').focus(); return false; }
+      } else if(step === 3){
         if(!req('firstName','first name') || !req('lastName','last name')) return false;
         const email = $('email').value.trim();
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMsg('Please enter a valid email address.'); return false; }
         if(!req('phone','phone number')) return false;
-      } else if(step === 2){
-        if(!$('country').value){ showMsg('Please select your country of residence.'); $('countrySearch').focus(); return false; }
-      } else if(step === 3){
-        if(!req('currency','currency')) return false;
       } else if(step === 4){
+        if(!req('currency','currency')) return false;
+      } else if(step === 5){
         const ids = ['survey_yearsOfExperience','survey_knowledgeLevel','survey_tradingFrequency','survey_preferredMarkets','survey_instrumentsTraded','survey_tradingPlatforms','survey_annualIncome','survey_primaryIncomeSource'];
         for(const id of ids){ if(!$(id).value){ showMsg('Please answer all questions.'); return false; } }
         if(!req('survey_taxResidency','tax residency')) return false;
-      } else if(step === 5){
+      } else if(step === 6){
         const p = $('password').value, c = $('confirm').value;
         if(p.length < 6){ showMsg('Password must be at least 6 characters.'); return false; }
         if(p !== c){ showMsg("Passwords don't match."); return false; }

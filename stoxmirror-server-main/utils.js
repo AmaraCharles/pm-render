@@ -24,7 +24,7 @@ const EMAIL_STYLES = `
   body {
     background-color: #f4f6f8;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: #333;
+    color: #000000;
     margin: 0;
     padding: 0;
   }
@@ -37,14 +37,14 @@ const EMAIL_STYLES = `
     overflow: hidden;
   }
   .header {
-    background: linear-gradient(135deg, #18e09b, #0e8e61);
-    color: #ffffff;
+    background: #000000;
+    color: #38bdf8;
     text-align: center;
     padding: 30px 20px;
   }
   .header img {
-    width: 50px;
-    height: 50px;
+    width: 200px;
+    height: auto;
     margin-bottom: 10px;
   }
   .header h1 {
@@ -56,7 +56,7 @@ const EMAIL_STYLES = `
     text-align: left;
   }
   .content h2 {
-    color: #18e09b;
+    color: #000000;
     font-size: 18px;
     margin-bottom: 10px;
   }
@@ -66,8 +66,8 @@ const EMAIL_STYLES = `
     margin: 10px 0;
   }
   .otp-box {
-    background: #f0f4ff;
-    color: #18e09b;
+    background: #000000;
+    color: #38bdf8;
     font-size: 28px;
     letter-spacing: 6px;
     font-weight: bold;
@@ -75,12 +75,12 @@ const EMAIL_STYLES = `
     padding: 18px;
     border-radius: 8px;
     margin: 25px 0;
-    border: 1px solid #d4e0ff;
+    border: 1px solid #000000;
   }
   .details {
     width: 100%;
-    background: #f9fafb;
-    border: 1px solid #e6e6e6;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
     border-radius: 8px;
     margin: 20px 0;
     border-collapse: separate;
@@ -92,32 +92,32 @@ const EMAIL_STYLES = `
     vertical-align: top;
   }
   .detail-label {
-    color: #18e09b;
+    color: #000000;
     font-weight: bold;
     width: 140px;
   }
   .detail-value {
-    color: #333;
+    color: #000000;
     word-break: break-all;
   }
   .highlight {
-    color: #18e09b;
+    color: #0284c7;
     font-weight: bold;
   }
   .note {
-    background: #f9fafb;
+    background: #f0f9ff;
     padding: 12px;
-    border-left: 4px solid #18e09b;
+    border-left: 4px solid #38bdf8;
     font-size: 14px;
-    color: #555;
+    color: #000000;
     margin-top: 10px;
   }
   .note-warning { border-left-color: #ff9800; background: #fff8ee; }
   .note-danger { border-left-color: #f44336; background: #fff3f2; }
   .button {
     display: inline-block;
-    background: #18e09b;
-    color: #ffffff !important;
+    background: #38bdf8;
+    color: #000000 !important;
     text-decoration: none;
     font-weight: bold;
     padding: 12px 28px;
@@ -125,15 +125,15 @@ const EMAIL_STYLES = `
     margin: 15px 0;
   }
   .footer {
-    background-color: #f8f9fa;
+    background-color: #000000;
     text-align: center;
     padding: 20px;
     font-size: 13px;
-    color: #888;
-    border-top: 1px solid #e6e6e6;
+    color: #cccccc;
+    border-top: 3px solid #38bdf8;
   }
   .footer a {
-    color: #18e09b;
+    color: #38bdf8;
     text-decoration: none;
   }
 `;

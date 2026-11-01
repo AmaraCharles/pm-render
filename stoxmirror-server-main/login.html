@@ -116,10 +116,24 @@
           dataType:'json', timeout:30000
         });
         if(res && res.code === 'Ok' && res.data){
-          localStorage.setItem('userData', JSON.stringify(res.data));
-          if(res.token) localStorage.setItem('adminToken', res.token);
+          const user = Object.assign({}, res.data);
+          // never keep credentials/one-time codes in localStorage
+          delete user.password; delete user.otp; delete user.otpExpiration;
+
+          // clear any previous session first
+          localStorage.removeItem('user');
+          localStorage.removeItem('adminToken');
+          localStorage.setItem('userData', JSON.stringify(user));
+
           showMsg('Signed in. Redirecting…', true);
-          window.location.href = '/dashboard/public/';
+          // The server only returns a token for accounts with isAdmin: true
+          if(user.isAdmin && res.token){
+            localStorage.setItem('adminToken', res.token);
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.href = '/dashboard/admin/test.html';
+          } else {
+            window.location.href = '/dashboard/public/';
+          }
         } else {
           showMsg('Unexpected response. Please try again.');
           btn.disabled=false; btn.textContent='Sign In';

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
-  <title>Sign In — Logic Pro Trading</title>
+  <title>Sign In — pruxdemarkets</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,13 +30,7 @@
       box-shadow:0 30px 80px rgba(0,0,0,.6);
     }
     .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px}
-    .brand-mark{
-      width:34px;height:34px;border-radius:9px;flex-shrink:0;
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;
-    }
-    .brand-name{font-weight:700;letter-spacing:.3px;color:var(--heading);font-size:1.05rem}
-    .brand-name span{background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .brand-logo{display:block;width:210px;max-width:100%;height:auto;margin:-14px 0}
     h1{color:var(--heading);font-size:1.6rem;font-weight:800;margin-bottom:6px}
     .sub{color:var(--muted);font-size:.95rem;margin-bottom:26px}
     label{display:block;font-size:.85rem;color:var(--muted);margin:16px 0 7px}
@@ -66,10 +60,7 @@
 </head>
 <body>
   <form class="auth-card" id="loginForm" autocomplete="on">
-    <div class="brand">
-      <span class="brand-mark">AP</span>
-      <span class="brand-name">ACMW<span>Pro</span> Trading</span>
-    </div>
+    <div class="brand"><img class="brand-logo" src="https://www.pruxdemarkets.com/logo.png" alt="pruxdemarkets"></div>
     <h1>Welcome back</h1>
     <p class="sub">Sign in to your account to continue.</p>
 
@@ -90,7 +81,7 @@
   </form>
 
   <script>
-    const API = "https://logicpro-render.onrender.com";
+    const API = "https://pm-render-853f.onrender.com";
     const $msg = document.getElementById('msg');
     function showMsg(text, ok){ $msg.className = 'msg ' + (ok ? 'ok' : 'err'); $msg.textContent = text; $msg.style.display = 'block'; }
 
@@ -113,7 +104,7 @@
         const res = await $.ajax({
           type:'POST', url:API + '/auth/login',
           contentType:'application/json', data: JSON.stringify({ email, password }),
-          dataType:'json', timeout:30000
+          dataType:'json', timeout:60000   // Render can take ~50s to wake a sleeping server
         });
         if(res && res.code === 'Ok' && res.data){
           const user = Object.assign({}, res.data);
@@ -142,8 +133,11 @@
         const code = err.status;
         let m = 'Login failed. Please try again.';
         if(code === 404) m = 'No account found with that email.';
-        else if(code === 401 || code === 400) m = 'Incorrect email or password.';
+        // The API answers a wrong password with 502 and a JSON body; a 502 with
+        // no JSON comes from Render itself and means the server is unavailable.
+        else if(code === 401 || code === 400 || (code === 502 && err.responseJSON)) m = 'Incorrect email or password.';
         else if(err.responseJSON && err.responseJSON.message) m = err.responseJSON.message;
+        else if(err.statusText === 'timeout' || !code || code >= 500) m = 'The server is not responding. Please try again in a minute.';
         showMsg(m);
         btn.disabled=false; btn.textContent='Sign In';
       }

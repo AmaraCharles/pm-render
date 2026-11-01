@@ -16,36 +16,47 @@ router.post("/login", async function (request, response) {
    * step3: if it is correct, return some data
    */
 
-  // step1
-  const user = await UsersDatabase.findOne({ email: email });
+  if (typeof email !== "string" || typeof password !== "string") {
+    return response.status(400).json({ code: "email and password are required" });
+  }
 
-  if (user) {
-    // step2
-    const passwordIsCorrect = compareHashedPassword(user.password, password);
+  // An uncaught error in this async handler would take the whole server down.
+  try {
+    // step1
+    const user = await UsersDatabase.findByEmail(email);
 
-    if (passwordIsCorrect) {
-      // Strict false: accounts from before approval existed are undefined.
-      if (user.accountApproved === false && !isAdminUser(user)) {
-        return response.status(403).json({
-          code: "account not approved",
-          message:
-            "Your account is awaiting admin approval. Please contact your personal trader for access.",
-        });
+    if (user) {
+      // step2 (bcrypt throws if an account has no stored password)
+      const passwordIsCorrect =
+        typeof user.password === "string" && compareHashedPassword(user.password, password);
+
+      if (passwordIsCorrect) {
+        // Strict false: accounts from before approval existed are undefined.
+        if (user.accountApproved === false && !isAdminUser(user)) {
+          return response.status(403).json({
+            code: "account not approved",
+            message:
+              "Your account is awaiting admin approval. Please contact your personal trader for access.",
+          });
+        }
+
+        const responseBody = { code: "Ok", data: user };
+        if (isAdminUser(user)) {
+          // Only admin accounts get a token — this is what the admin
+          // dashboard sends back as Authorization: Bearer <token> to prove
+          // it's really talking to an authenticated admin.
+          responseBody.token = signAdminToken(user);
+        }
+        response.status(200).json(responseBody);
+      } else {
+        response.status(502).json({ code: "invalid credentials" });
       }
-
-      const responseBody = { code: "Ok", data: user };
-      if (isAdminUser(user)) {
-        // Only admin accounts get a token — this is what the admin
-        // dashboard sends back as Authorization: Bearer <token> to prove
-        // it's really talking to an authenticated admin.
-        responseBody.token = signAdminToken(user);
-      }
-      response.status(200).json(responseBody);
     } else {
-      response.status(502).json({ code: "invalid credentials" });
+      response.status(404).json({ code: "no user found" });
     }
-  } else {
-    response.status(404).json({ code: "no user found" });
+  } catch (error) {
+    console.error("Login error:", error);
+    response.status(500).json({ code: "server error" });
   }
 });
 

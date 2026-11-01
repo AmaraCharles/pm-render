@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Email — Logic Pro Trading</title>
+  <title>Verify Email — pruxdemarkets</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -13,9 +13,7 @@
     body{font-family:'Inter',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background-image:radial-gradient(1200px 500px at 50% -10%, rgba(55,96,255,.12), transparent 60%)}
     .auth-card{width:100%;max-width:440px;background:linear-gradient(137.45deg,var(--panel-a) 7%,var(--panel-b) 104%);border:1px solid var(--card-border);border-radius:20px;padding:36px 32px;box-shadow:0 30px 80px rgba(0,0,0,.6);text-align:center}
     .brand{display:flex;align-items:center;gap:10px;margin-bottom:24px;justify-content:center}
-    .brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
-    .brand-name{font-weight:700;color:var(--heading)}
-    .brand-name span{background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .brand-logo{display:block;width:210px;max-width:100%;height:auto;margin:-14px 0}
     h1{color:var(--heading);font-size:1.5rem;font-weight:800;margin-bottom:8px}
     .sub{color:var(--muted);font-size:.93rem;margin-bottom:8px}
     .sub b{color:var(--text)}
@@ -33,7 +31,7 @@
 </head>
 <body>
   <div class="auth-card">
-    <div class="brand"><span class="brand-mark">PM</span><span class="brand-name">PRUXDE<span>Pro</span> Trading</span></div>
+    <div class="brand"><img class="brand-logo" src="https://www.pruxdemarkets.com/logo.png" alt="pruxdemarkets"></div>
     <h1>Verify your email</h1>
     <p class="sub">We sent a 6-digit code to <b id="email">your email</b>.</p>
     <p class="sub">Enter it below to verify your email.</p>
@@ -51,7 +49,7 @@
   </div>
 
   <script>
-    const API = "https://logicpro-render.onrender.com";
+    const API = "https://pm-render-853f.onrender.com";
     const email = localStorage.getItem('reg_email') || '';
     const msg = document.getElementById('msg');
     const showMsg = (t, ok) => { msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.textContent = t; msg.style.display = 'block'; };

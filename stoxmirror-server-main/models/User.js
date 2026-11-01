@@ -127,6 +127,11 @@ kycRejectionReason: { type: String },
   },
   approvedAt: { type: Date },
   approvedBy: { type: String },
+  // Forgot-password code (bcrypt hash). select:false keeps these out of every
+  // normal query, so they never appear in API responses such as GET /users/:email.
+  passwordResetOtp: { type: String, select: false },
+  passwordResetExpires: { type: Date, select: false },
+  passwordResetAttempts: { type: Number, select: false },
 
   // Collected on the registration page (register.html) and shown in the
   // admin "Edit User" → KYC Survey Data card.
@@ -145,5 +150,14 @@ kycRejectionReason: { type: String },
   survey_taxResidency: { type: String },
   surveyCompleted: { type: Boolean, default: false },
 });
+
+// Emails are stored as typed at registration, so an exact match can miss an
+// account saved as "Name@Gmail.com". An exact match still wins if two accounts
+// differ only by case.
+UsersSchema.statics.findByEmail = async function (email, select = "") {
+  const exact = await this.findOne({ email }).select(select);
+  if (exact) return exact;
+  return this.findOne({ email }).select(select).collation({ locale: "en", strength: 2 });
+};
 
 module.exports = mongoose.model("users", UsersSchema);

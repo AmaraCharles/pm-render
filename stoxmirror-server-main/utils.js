@@ -567,10 +567,11 @@ const sendUserDetails = async ({ to, password, firstName, token }) => {
   }
 };
 
-const sendPasswordOtp = async ({ to }) => {
+const sendPasswordOtp = async ({ to, otp }) => {
   try {
-    await resend.emails.send({
-      from: process.env.EMAIL_USER,
+    // Resend reports failures in the result rather than by throwing
+    const { error } = await resend.emails.send({
+      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
       to: to,
       subject: 'Password Reset',
       html: emailLayout({
@@ -579,12 +580,13 @@ const sendPasswordOtp = async ({ to }) => {
           <h2>Your Reset Code</h2>
           <p>Hello,</p>
           <p>Use the code below to reset your password:</p>
-          ${otpBox(speakeasy.totp({ secret: secret.base32, encoding: 'base32' }))}
+          ${otpBox(otp || speakeasy.totp({ secret: secret.base32, encoding: 'base32' }))}
           <p>This code is valid for a short period of time. For your security, never share it with anyone.</p>
           ${note("If you did not request this code, please ignore this email.")}
         `,
       }),
     });
+    if (error) throw new Error(error.message);
     console.log('Password reset OTP email sent successfully');
   } catch (error) {
     console.error('Error sending password reset OTP email:', error);

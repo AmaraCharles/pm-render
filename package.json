@@ -1,4 +1,14 @@
 {
+  "name": "pm-render",
+  "private": true,
+  "description": "Heroku builds from the repo root; the API lives in stoxmirror-server-main.",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "heroku-postbuild": "npm ci --prefix stoxmirror-server-main",
+    "start": "node stoxmirror-server-main/app.js"
+  },
   "dependencies": {
     "resend": "^6.2.2"
   }

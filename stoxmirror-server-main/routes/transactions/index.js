@@ -11,7 +11,8 @@ const { sendDepositEmail,sendPlanEmail} = require("../../utils");
 const { sendUserDepositEmail,sendUserPlanEmail,sendBankDepositRequestEmail,sendWithdrawalEmail,sendWithdrawalRequestEmail,sendKycAlert,sendDepositApproval,sendWithdrawalApproval,sendKYCApprovalEmail,sendKYCRejectionEmail} = require("../../utils");
 const nodeCrypto = require("crypto");
 const { Resend } = require("resend");
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Same fallback as utils.js: without a key the client throws and the server would not start.
+const resend = new Resend(process.env.RESEND_API_KEY || "re_not_configured");
 
 
 // If global.crypto is missing or incomplete, polyfill it

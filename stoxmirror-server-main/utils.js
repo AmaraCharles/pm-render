@@ -5,7 +5,12 @@ const speakeasy = require("speakeasy");
 const { Resend } = require("resend"); // ✅ Correct import
 const secret = speakeasy.generateSecret({ length: 4 });
 
-const resend = new Resend(process.env.RESEND_API_KEY); // ✅ Must initialize with your API key
+// The Resend client throws at construction without a key, which would crash
+// the whole server on startup. Start anyway; sends fail until the key is set.
+if (!process.env.RESEND_API_KEY) {
+  console.warn("RESEND_API_KEY is not set — emails will fail to send.");
+}
+const resend = new Resend(process.env.RESEND_API_KEY || "re_not_configured");
 
 // Hash password
 const hashPassword = (password) => bcrypt.hashSync(password, salt);

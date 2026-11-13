@@ -3355,7 +3355,7 @@ function renderReferralsPage() {
       <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Your Referral Code</h2>
       <p class="text-muted" style="margin-bottom: 1rem;">Share this code with your friends. They get a bonus and you earn 10% of their first deposit!</p>
       <div class="referral-code">
-        <input type="text" id="referralCodeInput" class="input" value="https://www.pruxdemarkets.com/register?ref=${user.referralCode}" readonly>
+        <input type="text" id="referralCodeInput" class="input" value="https://www.pruxdemarkets.net/register?ref=${user.referralCode}" readonly>
         <button class="copy-btn" onclick="copyReferralCode()">
           <svg style="width: 1rem; height: 1rem; display: inline; vertical-align: middle; margin-right: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>

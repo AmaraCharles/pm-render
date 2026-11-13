@@ -22,8 +22,8 @@ const compareHashedPassword = (hashedPassword, password) =>
 /* =====================================================================
    Shared email layout — every email uses the welcome-email styling
    ===================================================================== */
-const SITE_URL = process.env.SITE_URL || "https://pruxdemarkets.com";
-const SUPPORT_EMAIL = "support@pruxdemarkets.com";
+const SITE_URL = process.env.SITE_URL || "https://pruxdemarkets.net";
+const SUPPORT_EMAIL = "support@pruxdemarkets.net";
 
 const EMAIL_STYLES = `
   body {
@@ -155,7 +155,7 @@ const emailLayout = ({ title, body }) => `
   <body>
     <div class="container">
       <div class="header">
-        <img src="https://pruxdemarkets.com/logo.png" alt="pruxdemarkets Logo" />
+        <img src="https://pruxdemarkets.net/logo.png" alt="pruxdemarkets Logo" />
         <h1>${title}</h1>
       </div>
       <div class="content">
@@ -192,7 +192,7 @@ const button = (href, label) => `<p style="text-align:center;"><a href="${href}"
 const sendWithdrawalRequestEmail = async ({ from, amount, method, address }) => {
   try {
     await resend.emails.send({
-      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
+      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.net",
       to: SUPPORT_EMAIL,
       subject: "Transaction Notification",
       html: emailLayout({
@@ -576,7 +576,7 @@ const sendPasswordOtp = async ({ to, otp }) => {
   try {
     // Resend reports failures in the result rather than by throwing
     const { error } = await resend.emails.send({
-      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
+      from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.net",
       to: to,
       subject: 'Password Reset',
       html: emailLayout({
@@ -754,7 +754,7 @@ const sendWalletChangeAlert = async ({ adminEmail, ip, timestamp, before, after 
       : "<em>none</em>";
 
   await resend.emails.send({
-    from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.com",
+    from: process.env.EMAIL_USER || "no-reply@pruxdemarkets.net",
     to: SUPPORT_EMAIL,
     subject: "SECURITY: Deposit wallet addresses changed",
     html: emailLayout({
